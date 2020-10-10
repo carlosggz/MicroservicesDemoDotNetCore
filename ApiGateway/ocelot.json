@@ -10,7 +10,8 @@
 				}
 			],
 			"UpstreamPathTemplate": "/movies",
-			"UpstreamHttpMethod": [ "Get" ]
+			"UpstreamHttpMethod": [ "Get" ],
+			"Key": "Movies"
 		},
 		{
 			"DownstreamPathTemplate": "/api/v1/movies/{id}",
@@ -34,7 +35,8 @@
 				}
 			],
 			"UpstreamPathTemplate": "/actors",
-			"UpstreamHttpMethod": [ "Get" ]
+			"UpstreamHttpMethod": [ "Get" ],
+			"Key": "Actors"
 		},
 		{
 			"DownstreamPathTemplate": "/api/v1/actors/{id}",
@@ -47,6 +49,15 @@
 			],
 			"UpstreamPathTemplate": "/actors/{id}",
 			"UpstreamHttpMethod": [ "Get" ]
+		}
+	],
+	"Aggregates": [
+		{
+			"RouteKeys": [
+				"Movies",
+				"Actors"
+			],
+			"UpstreamPathTemplate": "/All"
 		}
 	]
 }
