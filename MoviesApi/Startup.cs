@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Common.Domain;
+using Common.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -43,6 +45,12 @@ namespace MoviesApi
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 options.IncludeXmlComments(xmlPath);
+            });
+
+            services.AddSingleton<IEventBus, RabbitMQEventBus>(x =>
+            {
+                var scopeFactory = x.GetRequiredService<IServiceScopeFactory>();
+                return new RabbitMQEventBus(x.GetService<ILogger<RabbitMQEventBus>>(), Configuration, scopeFactory);
             });
         }
 

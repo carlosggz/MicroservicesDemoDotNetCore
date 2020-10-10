@@ -6,6 +6,8 @@ using System.Reflection;
 using System.Threading.Tasks;
 using ActorsApi.Domain;
 using ActorsApi.Infrastructure;
+using Common.Domain;
+using Common.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -44,6 +46,14 @@ namespace ActorsApi
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 options.IncludeXmlComments(xmlPath);
             });
+
+            services.AddSingleton<IEventBus, RabbitMQEventBus>(x =>
+            {
+                var scopeFactory = x.GetRequiredService<IServiceScopeFactory>();
+                return new RabbitMQEventBus(x.GetService<ILogger<RabbitMQEventBus>>(), Configuration, scopeFactory);
+            });
+
+            services.AddTransient<LikeEventSubscriber>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -68,6 +78,9 @@ namespace ActorsApi
             {
                 endpoints.MapControllers();
             });
+
+            var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
+            eventBus.Subscribe<LikeAddedEvent, LikeEventSubscriber>();
         }
     }
 }
