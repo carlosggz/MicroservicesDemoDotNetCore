@@ -33,9 +33,6 @@ namespace MoviesApi.Controllers
         [HttpGet]
         public async Task<ActionResult<MovieEntity>> GetById([FromRoute] string id)
         {
-            if (string.IsNullOrEmpty(id))
-                return BadRequest();
-
             var movie = await _mediator.Send(new GetMovieDetailsQuery(id));
 
             if (movie == null)
@@ -44,19 +41,24 @@ namespace MoviesApi.Controllers
             return Ok(movie);
         }
 
-        [Route("likes/{id}")]
+        [Route("like/{id}")]
         [HttpGet]
         public async Task<ActionResult> AddLikes([FromRoute] string id)
         {
-            if (string.IsNullOrEmpty(id))
-                return BadRequest();
-
             var result = await _mediator.Send(new AddLikeCommand(id));
 
             if (!result)
                 return BadRequest();
 
             return Ok();
+        }
+
+        [Route("search")]
+        [HttpPost]
+        public async Task<ActionResult<IEnumerable<MovieDto>>> Search([FromBody] string[] ids)
+        { 
+            var result = await _mediator.Send(new SearchQuery(ids));
+            return Ok(result);
         }
     }
 }

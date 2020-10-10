@@ -15,6 +15,9 @@ namespace MoviesApi.Application.Commands
         {
             return Task.Run(() =>
             {
+                if (string.IsNullOrWhiteSpace(request.Id))
+                    return false;
+
                 var entity = _repository.GetById(request.Id);
 
                 if (entity == null)

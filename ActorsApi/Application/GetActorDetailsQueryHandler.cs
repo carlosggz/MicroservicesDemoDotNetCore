@@ -13,6 +13,13 @@ namespace ActorsApi.Application
             => _repository = repository;
 
         public Task<ActorEntity> Handle(GetActorDetailsQuery request, CancellationToken cancellationToken)
-            => Task.FromResult(_repository.GetById(request.Id));
+        {
+            return Task.Run(() => 
+            {
+                return string.IsNullOrWhiteSpace(request.Id)
+                    ? null
+                    : _repository.GetById(request.Id);
+            });
+        }
     }
 }

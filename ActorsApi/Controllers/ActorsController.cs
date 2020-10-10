@@ -32,9 +32,6 @@ namespace ActorsApi.Controllers
         [HttpGet]
         public async Task<ActionResult<ActorEntity>> GetById([FromRoute] string id)
         {
-            if (string.IsNullOrEmpty(id))
-                return BadRequest();
-
             var actor = await _mediator.Send(new GetActorDetailsQuery(id));
 
             if (actor == null)

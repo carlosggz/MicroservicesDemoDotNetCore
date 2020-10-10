@@ -48,7 +48,10 @@
 				}
 			],
 			"UpstreamPathTemplate": "/actors/{id}",
-			"UpstreamHttpMethod": [ "Get" ]
+			"UpstreamHttpMethod": [ "Get" ],
+			"DelegatingHandlers": [
+				"ActorDetailsHandler"
+			]
 		}
 	],
 	"Aggregates": [

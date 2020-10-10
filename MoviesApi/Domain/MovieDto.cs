@@ -9,5 +9,14 @@ namespace MoviesApi.Domain
     {
         public string Id { get; set; }
         public string Title { get; set; }
+
+        public MovieDto()
+        {}
+
+        public MovieDto(MovieEntity entity)
+        {
+            Id = entity.Id;
+            Title = entity.Title;
+        }
     }
 }

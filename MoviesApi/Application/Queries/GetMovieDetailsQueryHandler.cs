@@ -13,6 +13,13 @@ namespace MoviesApi.Application.Queries
             => _repository = repository;
 
         public Task<MovieEntity> Handle(GetMovieDetailsQuery request, CancellationToken cancellationToken)
-            => Task.FromResult(_repository.GetById(request.Id));
+        {
+            return Task.Run(() => 
+            {
+                return string.IsNullOrWhiteSpace(request.Id)
+                    ? null
+                    : _repository.GetById(request.Id);
+            });
+        }
     }
 }

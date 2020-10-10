@@ -10,5 +10,6 @@ namespace MoviesApi.Domain
         IEnumerable<MovieDto> GetAll();
         MovieEntity GetById(string id);
         void Update(MovieEntity movie);
+        IEnumerable<MovieDto> Search(IEnumerable<string> ids);
     }
 }

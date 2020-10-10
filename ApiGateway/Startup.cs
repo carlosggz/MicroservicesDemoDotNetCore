@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ApiGateway.MessageHandlers;
+using ApiGateway.Remotes;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +29,14 @@ namespace ApiGateway
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddOcelot();
+            services.AddOcelot().AddDelegatingHandler<ActorDetailsHandler>();
+
+            services.AddHttpClient("MoviesService", config =>
+            {
+                config.BaseAddress = new Uri(Configuration["Services:Movies"]);
+            });
+
+            services.AddSingleton<IRemoteMoviesService, RemoteMoviesService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -26,10 +26,13 @@ namespace MoviesApi.Infrastructure
         }
 
         public IEnumerable<MovieDto> GetAll()
-            => _movies.Select(x => new MovieDto() { Id = x.Id, Title = x.Title });
+            => _movies.Select(x => new MovieDto(x));
 
         public MovieEntity GetById(string id)
-            => _movies.FirstOrDefault(x => x.Id == id); 
+            => _movies.FirstOrDefault(x => x.Id == id);
+
+        public IEnumerable<MovieDto> Search(IEnumerable<string> ids)
+            => _movies.Where(x => ids.Contains(x.Id)).Select(x => new MovieDto(x));
 
         #endregion
     }
