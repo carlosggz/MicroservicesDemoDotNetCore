@@ -37,7 +37,7 @@ namespace Common.Infrastructure
         public void DiscardEvents()
             => _pendingEvents.Clear();
 
-        public void Record(DomainEvent domainEvent) 
+        public void Record(IDomainEvent domainEvent) 
             => _pendingEvents.Add(domainEvent ?? throw new InvalidEventDomainException("Invalid event"));
 
         public Task PublishAsync()
@@ -86,39 +86,38 @@ namespace Common.Infrastructure
                 _eventMap.Add(eventName, typeof(E));
 
             var factory = new ConnectionFactory() { HostName = _rabbitHostname, Port = _rabbitPort, DispatchConsumersAsync = true };
-
-            using (var connection = factory.CreateConnection())
-            {
-                using var channel = connection.CreateModel();
+            var connection = factory.CreateConnection();
+            var channel = connection.CreateModel();
                 
-                channel.QueueDeclare(eventName, false, false, false, null);
-                var consumer = new AsyncEventingBasicConsumer(channel);
-                consumer.Received += ConsumerProcessMessage;
+            channel.QueueDeclare(eventName, false, false, false, null);
+            var consumer = new AsyncEventingBasicConsumer(channel);
+            consumer.Received += ConsumerProcessMessage;
 
-                channel.BasicConsume(eventName, true, consumer);
-            }
-
+            channel.BasicConsume(eventName, true, consumer);
         }
 
         #endregion
 
         private string GetEventName(Type evt)
-            => GetEventName(evt.GetType().Name);
+            => GetEventName(evt.Name);
 
         private string GetEventName(string eventName)
             => $"Demo-{eventName}-v1";
 
         private async Task ConsumerProcessMessage(object sender, BasicDeliverEventArgs e)
         {
-            var eventName = GetEventName(e.RoutingKey);
+            var eventName = e.RoutingKey;
+
+            _logger.LogInformation($"Detected event {eventName}");
 
             if (!_subscribers.ContainsKey(eventName))
                 return;
-            
+
+            _logger.LogInformation("Processing event...");
             var subscriptions = _subscribers[eventName];
             var body = Encoding.UTF8.GetString(e.Body.ToArray());
-            //var message = System.Text.Json.JsonSerializer.Deserialize(body, _eventMap[eventName]);
-            var message = Newtonsoft.Json.JsonConvert.DeserializeObject(body, _eventMap[eventName]);
+            var message = System.Text.Json.JsonSerializer.Deserialize(body, _eventMap[eventName]);
+            //var message = Newtonsoft.Json.JsonConvert.DeserializeObject(body, _eventMap[eventName]);
 
             try
             {

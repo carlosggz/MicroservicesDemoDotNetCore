@@ -7,7 +7,7 @@ namespace Common.Domain
 {
     public interface IEventBus
     {
-        void Record(DomainEvent domainEvent);
+        void Record(IDomainEvent domainEvent);
         Task PublishAsync();
         void DiscardEvents();
         void Subscribe<E, H>()

@@ -25,6 +25,9 @@ namespace ActorsApi.Infrastructure
         public ActorEntity GetById(string id)
             => _actors.FirstOrDefault(x => x.Id == id);
 
+        public IEnumerable<ActorEntity> Search(string movieId)
+            => _actors.Where(x => x.Movies.Contains(movieId));
+
         public void Update(ActorEntity actor)
         {
             var a = GetById(actor.Id);
