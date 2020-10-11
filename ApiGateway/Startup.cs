@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using ApiGateway.MessageHandlers;
 using ApiGateway.Remotes;
@@ -14,6 +15,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using Ocelot.Provider.Polly;
+using Polly;
+using Polly.Extensions.Http;
 
 namespace ApiGateway
 {
@@ -33,12 +37,18 @@ namespace ApiGateway
 
             ConfigHelpers.ConfigureJwt(services, Configuration);
 
-            services.AddOcelot().AddDelegatingHandler<ActorDetailsHandler>();
+            services
+                .AddOcelot()
+                .AddDelegatingHandler<ActorDetailsHandler>()
+                .AddPolly();
 
             services.AddHttpClient("MoviesService", config =>
             {
                 config.BaseAddress = new Uri(Configuration.GetValue<string>("Services:Movies"));
-            });
+            })
+            .SetHandlerLifetime(TimeSpan.FromMinutes(3))
+            .AddPolicyHandler(GetRetryPolicy())
+            .AddPolicyHandler(GetCircuitBreakerPolicy());
 
             services.AddSingleton<IRemoteMoviesService, RemoteMoviesService>();
         }
@@ -61,6 +71,22 @@ namespace ApiGateway
             });
 
             await app.UseOcelot();
+        }
+        private IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+        {
+            return HttpPolicyExtensions
+                // HttpRequestException, 5XX and 408
+                .HandleTransientHttpError()
+                // 404
+                .OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.NotFound)
+                // Retry three times after delay
+                .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
+        }
+        private IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy()
+        {
+            return HttpPolicyExtensions
+                .HandleTransientHttpError()
+                .CircuitBreakerAsync(6, TimeSpan.FromSeconds(30));
         }
     }
 }

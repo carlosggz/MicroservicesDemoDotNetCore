@@ -98,5 +98,10 @@
 			],
 			"UpstreamPathTemplate": "/All"
 		}
-	]
+	],
+	"QoSOptions": {
+		"ExceptionsAllowedBeforeBreaking": 3,
+		"DurationOfBreak": 3000,
+		"TimeoutValue": 5000
+	}
 }
