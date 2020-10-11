@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AuthApi.Domain;
 using AuthApi.Infrastructure;
+using Common.Helpers;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -39,26 +40,7 @@ namespace AuthApi
             services.AddTransient<ITokenBuilder, JwtTokenBuilder>();
             services.AddTransient<IUsersRepository, InMemoryUsersRepository>();
 
-            #region JWT
-            var key = Encoding.ASCII.GetBytes(Configuration.GetValue<string>("AuthSettings:SecretKey"));
-
-            services.AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(x =>
-            {
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
-            });
-            #endregion
+            ConfigHelpers.ConfigureJwt(services, Configuration);
 
             services.AddSwaggerGen(options => {
                 options.SwaggerDoc("v1", new OpenApiInfo() { Title = "Auth API", Version = "v1" });

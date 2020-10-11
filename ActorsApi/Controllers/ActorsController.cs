@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ActorsApi.Application;
 using ActorsApi.Domain;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ActorsApi.Controllers
@@ -28,6 +29,7 @@ namespace ActorsApi.Controllers
             return Ok(actors);
         }
 
+        [Authorize]
         [Route("{id}")]
         [HttpGet]
         public async Task<ActionResult<ActorEntity>> GetById([FromRoute] string id)

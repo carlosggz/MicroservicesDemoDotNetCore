@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MoviesApi.Application.Commands;
 using MoviesApi.Application.Queries;
@@ -29,6 +30,7 @@ namespace MoviesApi.Controllers
             return Ok(movies);
         }
 
+        [Authorize]
         [Route("{id}")]
         [HttpGet]
         public async Task<ActionResult<MovieEntity>> GetById([FromRoute] string id)
@@ -41,6 +43,7 @@ namespace MoviesApi.Controllers
             return Ok(movie);
         }
 
+        [Authorize]
         [Route("like/{id}")]
         [HttpGet]
         public async Task<ActionResult> AddLikes([FromRoute] string id)

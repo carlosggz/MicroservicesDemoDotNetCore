@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using ActorsApi.Domain;
 using ActorsApi.Infrastructure;
 using Common.Domain;
+using Common.Helpers;
 using Common.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -36,6 +37,8 @@ namespace ActorsApi
             services.AddControllers();
             services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddTransient<IActorsRepository, InMemoryActorsRepository>();
+
+            ConfigHelpers.ConfigureJwt(services, Configuration);
 
             services.AddSwaggerGen(options => {
                 options.SwaggerDoc("v1", new OpenApiInfo() { Title = "Actors API", Version = "v1" });
@@ -73,6 +76,8 @@ namespace ActorsApi
             });
 
             app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
