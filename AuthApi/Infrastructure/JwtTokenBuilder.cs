@@ -28,7 +28,8 @@ namespace AuthApi.Infrastructure
             {
                 new Claim(ClaimTypes.NameIdentifier, user.UserName),
                 new Claim(ClaimTypes.Name, user.FullName),
-                new Claim(ClaimTypes.Email, user.Email)
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, string.Join(",", user.Roles))
             };
            
             var jwt = new JwtSecurityToken(claims: claims, signingCredentials: signingCredentials, expires: DateTime.Now.AddDays(1));

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ApiGateway.MessageHandlers;
 using ApiGateway.Remotes;
+using Common.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -29,6 +30,9 @@ namespace ApiGateway
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            ConfigHelpers.ConfigureJwt(services, Configuration);
+
             services.AddOcelot().AddDelegatingHandler<ActorDetailsHandler>();
 
             services.AddHttpClient("MoviesService", config =>
@@ -48,6 +52,8 @@ namespace ApiGateway
             }
 
             app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

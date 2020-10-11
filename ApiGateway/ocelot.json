@@ -23,7 +23,27 @@
 				}
 			],
 			"UpstreamPathTemplate": "/movies/{id}",
-			"UpstreamHttpMethod": [ "Get" ]
+			"UpstreamHttpMethod": [ "Get" ],
+			"AuthenticationOptions": {
+				"AuthenticationProviderKey": "Bearer",
+				"AllowedScopes": []
+			}
+		},
+		{
+			"DownstreamPathTemplate": "/api/v1/movies/like/{id}",
+			"DownstreamScheme": "http",
+			"DownstreamHostAndPorts": [
+				{
+					"Host": "localhost",
+					"Port": 8001
+				}
+			],
+			"UpstreamPathTemplate": "/like-movie/{id}",
+			"UpstreamHttpMethod": [ "Get" ],
+			"AuthenticationOptions": {
+				"AuthenticationProviderKey": "Bearer",
+				"AllowedScopes": []
+			}
 		},
 		{
 			"DownstreamPathTemplate": "/api/v1/actors",
@@ -51,7 +71,11 @@
 			"UpstreamHttpMethod": [ "Get" ],
 			"DelegatingHandlers": [
 				"ActorDetailsHandler"
-			]
+			],
+			"AuthenticationOptions": {
+				"AuthenticationProviderKey": "Bearer",
+				"AllowedScopes": []
+			}
 		},
 		{
 			"DownstreamPathTemplate": "/api/v1/auth",
