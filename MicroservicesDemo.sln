@@ -7,9 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoviesApi", "MoviesApi\Movi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{06F0F209-862E-4992-9259-ECCDCDA775B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActorsApi", "ActorsApi\ActorsApi.csproj", "{2D516E4E-9467-42B9-988A-2A288F27D8BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ActorsApi", "ActorsApi\ActorsApi.csproj", "{2D516E4E-9467-42B9-988A-2A288F27D8BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiGateway", "ApiGateway\ApiGateway.csproj", "{CBCC020B-1B47-4DB5-ACC9-B9F65D22F312}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateway", "ApiGateway\ApiGateway.csproj", "{CBCC020B-1B47-4DB5-ACC9-B9F65D22F312}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthApi", "AuthApi\AuthApi.csproj", "{C02C1C41-401F-49C3-92AC-0D5AB3911599}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{CBCC020B-1B47-4DB5-ACC9-B9F65D22F312}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CBCC020B-1B47-4DB5-ACC9-B9F65D22F312}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CBCC020B-1B47-4DB5-ACC9-B9F65D22F312}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C02C1C41-401F-49C3-92AC-0D5AB3911599}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C02C1C41-401F-49C3-92AC-0D5AB3911599}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C02C1C41-401F-49C3-92AC-0D5AB3911599}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C02C1C41-401F-49C3-92AC-0D5AB3911599}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

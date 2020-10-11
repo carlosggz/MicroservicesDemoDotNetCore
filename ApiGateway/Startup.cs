@@ -33,7 +33,7 @@ namespace ApiGateway
 
             services.AddHttpClient("MoviesService", config =>
             {
-                config.BaseAddress = new Uri(Configuration["Services:Movies"]);
+                config.BaseAddress = new Uri(Configuration.GetValue<string>("Services:Movies"));
             });
 
             services.AddSingleton<IRemoteMoviesService, RemoteMoviesService>();

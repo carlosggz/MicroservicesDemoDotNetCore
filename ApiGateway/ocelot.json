@@ -52,6 +52,18 @@
 			"DelegatingHandlers": [
 				"ActorDetailsHandler"
 			]
+		},
+		{
+			"DownstreamPathTemplate": "/api/v1/auth",
+			"DownstreamScheme": "http",
+			"DownstreamHostAndPorts": [
+				{
+					"Host": "localhost",
+					"Port": 8003
+				}
+			],
+			"UpstreamPathTemplate": "/login",
+			"UpstreamHttpMethod": [ "Post" ]
 		}
 	],
 	"Aggregates": [

@@ -29,8 +29,8 @@ namespace Common.Infrastructure
         {
             _logger = logger;
             _serviceScopeFactory = serviceScopeFactory;
-            _rabbitHostname = configuration["App:RabbitHostName"];
-            _rabbitPort = int.TryParse(configuration["App:RabbitPort"], out int portNumber) ? portNumber : RabbitDefaultPort;
+            _rabbitHostname = configuration.GetValue<string>("App:RabbitHostName");
+            _rabbitPort = configuration.GetValue<int>("App:RabbitPort", RabbitDefaultPort);
         }
 
         #region IEventBus
