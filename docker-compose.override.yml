@@ -10,32 +10,35 @@ services:
   actorsapi:
     environment:
       - ASPNETCORE_ENVIRONMENT=Containers
+      - ASPNETCORE_URLS=http://*:8002
       - ServiceConfig__ServiceDiscoveryAddress=http://consulservice:8500
-      - ServiceConfig__ServiceAddress=http://actorsapi:80
+      - ServiceConfig__ServiceAddress=http://actorsapi:8002
       - ServiceConfig__ServiceName=actors
       - ServiceConfig__ServiceId=v1
- #   ports:
- #     - "8002:80"
+    ports:
+      - "0.0.0.0:8002:80"
 
   moviesapi:
     environment:
       - ASPNETCORE_ENVIRONMENT=Containers
+      - ASPNETCORE_URLS=http://*:8001
       - ServiceConfig__ServiceDiscoveryAddress=http://consulservice:8500
-      - ServiceConfig__ServiceAddress=http://moviesapi:80
+      - ServiceConfig__ServiceAddress=http://moviesapi:8001
       - ServiceConfig__ServiceName=movies
       - ServiceConfig__ServiceId=v1
- #   ports:
- #     - "8001:80"
+    ports:
+      - "0.0.0.0:8001:80"
 
   authapi:
     environment:
       - ASPNETCORE_ENVIRONMENT=Containers
+      - ASPNETCORE_URLS=http://*:8003
       - ServiceConfig__ServiceDiscoveryAddress=http://consulservice:8500
-      - ServiceConfig__ServiceAddress=http://authapi:80
+      - ServiceConfig__ServiceAddress=http://authapi:8003
       - ServiceConfig__ServiceName=auth
       - ServiceConfig__ServiceId=v1
-#    ports:
-#      - "8003:80"
+    ports:
+      - "0.0.0.0:8003:80"
 
   rabbitmq:
     ports:
@@ -45,3 +48,7 @@ services:
   consulservice:
     ports:
       - "8500:8500"
+# docker network create -d bridge demo-network
+networks:
+  demo-network:
+    external: true

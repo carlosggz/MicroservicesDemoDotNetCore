@@ -1,0 +1,82 @@
+{
+	"Routes": [
+		{
+			"DownstreamPathTemplate": "/api/v1/movies",
+			"DownstreamScheme": "http",
+			"ServiceName": "movies",
+			"UpstreamPathTemplate": "/movies",
+			"UpstreamHttpMethod": [ "Get" ],
+			"Key": "Movies"
+		},
+		{
+			"DownstreamPathTemplate": "/api/v1/movies/{id}",
+			"DownstreamScheme": "http",
+			"ServiceName": "movies",
+			"UpstreamPathTemplate": "/movies/{id}",
+			"UpstreamHttpMethod": [ "Get" ],
+			"AuthenticationOptions": {
+				"AuthenticationProviderKey": "Bearer",
+				"AllowedScopes": []
+			}
+		},
+		{
+			"DownstreamPathTemplate": "/api/v1/movies/like/{id}",
+			"DownstreamScheme": "http",
+			"ServiceName": "movies",
+			"UpstreamPathTemplate": "/like-movie/{id}",
+			"UpstreamHttpMethod": [ "Get" ],
+			"AuthenticationOptions": {
+				"AuthenticationProviderKey": "Bearer",
+				"AllowedScopes": []
+			}
+		},
+		{
+			"DownstreamPathTemplate": "/api/v1/actors",
+			"DownstreamScheme": "http",
+			"ServiceName": "actors",
+			"UpstreamPathTemplate": "/actors",
+			"UpstreamHttpMethod": [ "Get" ],
+			"Key": "Actors"
+		},
+		{
+			"DownstreamPathTemplate": "/api/v1/actors/{id}",
+			"DownstreamScheme": "http",
+			"ServiceName": "actors",
+			"UpstreamPathTemplate": "/actors/{id}",
+			"UpstreamHttpMethod": [ "Get" ],
+			"DelegatingHandlers": [
+				"ActorDetailsHandler"
+			],
+			"AuthenticationOptions": {
+				"AuthenticationProviderKey": "Bearer",
+				"AllowedScopes": []
+			}
+		},
+		{
+			"DownstreamPathTemplate": "/api/v1/auth",
+			"DownstreamScheme": "http",
+			"ServiceName": "auth",
+			"UpstreamPathTemplate": "/login",
+			"UpstreamHttpMethod": [ "Post" ]
+		}
+	],
+	"Aggregates": [
+		{
+			"RouteKeys": [
+				"Movies",
+				"Actors"
+			],
+			"UpstreamPathTemplate": "/All"
+		}
+	],
+	"QoSOptions": {
+		"ExceptionsAllowedBeforeBreaking": 3,
+		"DurationOfBreak": 3000,
+		"TimeoutValue": 5000
+	},
+	"ServiceDiscoveryProvider": {
+		"Host": "localhost",
+		"Port": 8500,
+		"Type": "Consul"
+	}
+}
