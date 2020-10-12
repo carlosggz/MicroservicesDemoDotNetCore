@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Common.Domain;
-using Common.Helpers;
 using Common.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -38,7 +37,8 @@ namespace MoviesApi
             services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddTransient<IMoviesRepository, InMemoryMoviesRepository>();
 
-            ConfigHelpers.ConfigureJwt(services, Configuration);
+            services.RegisterJwtAuthentication(Configuration);
+            services.RegisterConsulServices(Configuration);
 
             services.AddSwaggerGen(options => {
                 options.SwaggerDoc("v1", new OpenApiInfo() { Title = "Movies API", Version = "v1" });

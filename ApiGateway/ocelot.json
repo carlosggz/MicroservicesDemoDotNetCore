@@ -3,12 +3,7 @@
 		{
 			"DownstreamPathTemplate": "/api/v1/movies",
 			"DownstreamScheme": "http",
-			"DownstreamHostAndPorts": [
-				{
-					"Host": "localhost",
-					"Port": 8001
-				}
-			],
+			"ServiceName": "movies",
 			"UpstreamPathTemplate": "/movies",
 			"UpstreamHttpMethod": [ "Get" ],
 			"Key": "Movies"
@@ -16,12 +11,7 @@
 		{
 			"DownstreamPathTemplate": "/api/v1/movies/{id}",
 			"DownstreamScheme": "http",
-			"DownstreamHostAndPorts": [
-				{
-					"Host": "localhost",
-					"Port": 8001
-				}
-			],
+			"ServiceName": "movies",
 			"UpstreamPathTemplate": "/movies/{id}",
 			"UpstreamHttpMethod": [ "Get" ],
 			"AuthenticationOptions": {
@@ -32,12 +22,7 @@
 		{
 			"DownstreamPathTemplate": "/api/v1/movies/like/{id}",
 			"DownstreamScheme": "http",
-			"DownstreamHostAndPorts": [
-				{
-					"Host": "localhost",
-					"Port": 8001
-				}
-			],
+			"ServiceName": "movies",
 			"UpstreamPathTemplate": "/like-movie/{id}",
 			"UpstreamHttpMethod": [ "Get" ],
 			"AuthenticationOptions": {
@@ -48,12 +33,7 @@
 		{
 			"DownstreamPathTemplate": "/api/v1/actors",
 			"DownstreamScheme": "http",
-			"DownstreamHostAndPorts": [
-				{
-					"Host": "localhost",
-					"Port": 8002
-				}
-			],
+			"ServiceName": "actors",
 			"UpstreamPathTemplate": "/actors",
 			"UpstreamHttpMethod": [ "Get" ],
 			"Key": "Actors"
@@ -61,12 +41,7 @@
 		{
 			"DownstreamPathTemplate": "/api/v1/actors/{id}",
 			"DownstreamScheme": "http",
-			"DownstreamHostAndPorts": [
-				{
-					"Host": "localhost",
-					"Port": 8002
-				}
-			],
+			"ServiceName": "actors",
 			"UpstreamPathTemplate": "/actors/{id}",
 			"UpstreamHttpMethod": [ "Get" ],
 			"DelegatingHandlers": [
@@ -80,12 +55,7 @@
 		{
 			"DownstreamPathTemplate": "/api/v1/auth",
 			"DownstreamScheme": "http",
-			"DownstreamHostAndPorts": [
-				{
-					"Host": "localhost",
-					"Port": 8003
-				}
-			],
+			"ServiceName": "auth",
 			"UpstreamPathTemplate": "/login",
 			"UpstreamHttpMethod": [ "Post" ]
 		}
@@ -103,5 +73,10 @@
 		"ExceptionsAllowedBeforeBreaking": 3,
 		"DurationOfBreak": 3000,
 		"TimeoutValue": 5000
+	},
+	"ServiceDiscoveryProvider": {
+		"Host": "consulservice",
+		"Port": 8500,
+		"Type": "Consul"
 	}
 }

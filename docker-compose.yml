@@ -1,0 +1,39 @@
+version: '3.4'
+
+services:
+  apigateway:
+    image: ${DOCKER_REGISTRY-}apigateway
+    build:
+      context: .
+      dockerfile: ApiGateway/Dockerfile
+
+  actorsapi:
+    image: ${DOCKER_REGISTRY-}actorsapi
+    build:
+      context: .
+      dockerfile: ActorsApi/Dockerfile
+    depends_on:
+        - rabbitmq
+
+  moviesapi:
+    image: ${DOCKER_REGISTRY-}moviesapi
+    build:
+      context: .
+      dockerfile: MoviesApi/Dockerfile
+    depends_on:
+        - rabbitmq
+
+  authapi:
+    image: ${DOCKER_REGISTRY-}authapi
+    build:
+      context: .
+      dockerfile: AuthApi/Dockerfile
+
+  rabbitmq:
+    image: rabbitmq:3-management
+
+  consulservice:
+    image: consul:latest
+    command: consul agent -dev -log-level=warn -ui -client=0.0.0.0
+    hostname: consulservice
+    container_name: consulservice

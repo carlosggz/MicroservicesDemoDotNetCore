@@ -1,0 +1,47 @@
+version: '3.4'
+
+services:
+  apigateway:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Containers
+    ports:
+      - "8000:80"
+
+  actorsapi:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Containers
+      - ServiceConfig__ServiceDiscoveryAddress=http://consulservice:8500
+      - ServiceConfig__ServiceAddress=http://actorsapi:80
+      - ServiceConfig__ServiceName=actors
+      - ServiceConfig__ServiceId=v1
+ #   ports:
+ #     - "8002:80"
+
+  moviesapi:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Containers
+      - ServiceConfig__ServiceDiscoveryAddress=http://consulservice:8500
+      - ServiceConfig__ServiceAddress=http://moviesapi:80
+      - ServiceConfig__ServiceName=movies
+      - ServiceConfig__ServiceId=v1
+ #   ports:
+ #     - "8001:80"
+
+  authapi:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Containers
+      - ServiceConfig__ServiceDiscoveryAddress=http://consulservice:8500
+      - ServiceConfig__ServiceAddress=http://authapi:80
+      - ServiceConfig__ServiceName=auth
+      - ServiceConfig__ServiceId=v1
+#    ports:
+#      - "8003:80"
+
+  rabbitmq:
+    ports:
+        - '5672:5672'
+        - '15672:15672'
+
+  consulservice:
+    ports:
+      - "8500:8500"

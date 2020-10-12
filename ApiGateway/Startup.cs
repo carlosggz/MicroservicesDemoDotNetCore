@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using ApiGateway.MessageHandlers;
 using ApiGateway.Remotes;
-using Common.Helpers;
+using Common.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using Ocelot.Provider.Consul;
 using Ocelot.Provider.Polly;
 using Polly;
 using Polly.Extensions.Http;
@@ -35,12 +36,13 @@ namespace ApiGateway
         {
             services.AddControllers();
 
-            ConfigHelpers.ConfigureJwt(services, Configuration);
+            ConfigHelpers.RegisterJwtAuthentication(services, Configuration);
 
             services
                 .AddOcelot()
                 .AddDelegatingHandler<ActorDetailsHandler>()
-                .AddPolly();
+                .AddPolly()
+                .AddConsul();
 
             services.AddHttpClient("MoviesService", config =>
             {

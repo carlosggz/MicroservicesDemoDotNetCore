@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AuthApi.Domain;
 using AuthApi.Infrastructure;
-using Common.Helpers;
+using Common.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -40,7 +40,8 @@ namespace AuthApi
             services.AddTransient<ITokenBuilder, JwtTokenBuilder>();
             services.AddTransient<IUsersRepository, InMemoryUsersRepository>();
 
-            ConfigHelpers.ConfigureJwt(services, Configuration);
+            services.RegisterJwtAuthentication(Configuration);
+            services.RegisterConsulServices(Configuration);
 
             services.AddSwaggerGen(options => {
                 options.SwaggerDoc("v1", new OpenApiInfo() { Title = "Auth API", Version = "v1" });

@@ -1,16 +1,18 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Consul;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Common.Helpers
+namespace Common.Infrastructure
 {
     public static class ConfigHelpers
     {
-        public static void ConfigureJwt(IServiceCollection services, IConfiguration configuration)
+        public static void RegisterJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
             var key = Encoding.ASCII.GetBytes(configuration.GetValue<string>("AuthSettings:SecretKey"));
 
@@ -31,5 +33,18 @@ namespace Common.Helpers
                 };
             });
         }
+        public static void RegisterConsulServices(this IServiceCollection services, IConfiguration configuration)
+        {
+            var section = configuration.GetSection("ServiceConfig");
+            services.Configure<ServiceConfig>(section);
+            ServiceConfig serviceConfig = section.Get<ServiceConfig>();
+
+            var consulClient = new ConsulClient(config => config.Address = serviceConfig.ServiceDiscoveryAddress);
+
+            services.AddSingleton(serviceConfig);
+            services.AddSingleton<IHostedService, ServiceDiscoveryHostedService>();
+            services.AddSingleton<IConsulClient, ConsulClient>(p => consulClient);
+        }
+
     }
 }
