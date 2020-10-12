@@ -12,7 +12,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Containers
       - ASPNETCORE_URLS=http://*:8002
       - ServiceConfig__ServiceDiscoveryAddress=http://consulservice:8500
-      - ServiceConfig__ServiceAddress=http://actorsapi:8002
+      - ServiceConfig__ServiceAddress=http://actorsapi
       - ServiceConfig__ServiceName=actors
       - ServiceConfig__ServiceId=v1
     ports:
@@ -23,7 +23,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Containers
       - ASPNETCORE_URLS=http://*:8001
       - ServiceConfig__ServiceDiscoveryAddress=http://consulservice:8500
-      - ServiceConfig__ServiceAddress=http://moviesapi:8001
+      - ServiceConfig__ServiceAddress=http://moviesapi
       - ServiceConfig__ServiceName=movies
       - ServiceConfig__ServiceId=v1
     ports:
@@ -34,7 +34,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Containers
       - ASPNETCORE_URLS=http://*:8003
       - ServiceConfig__ServiceDiscoveryAddress=http://consulservice:8500
-      - ServiceConfig__ServiceAddress=http://authapi:8003
+      - ServiceConfig__ServiceAddress=http://authapi
       - ServiceConfig__ServiceName=auth
       - ServiceConfig__ServiceId=v1
     ports:
@@ -48,7 +48,3 @@ services:
   consulservice:
     ports:
       - "8500:8500"
-# docker network create -d bridge demo-network
-networks:
-  demo-network:
-    external: true

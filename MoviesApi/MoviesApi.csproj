@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>C:\Development\Mine\MicroservicesDemo\MicroservicesDemo\MoviesApi\MoviesApi.xml</DocumentationFile>
+    <DocumentationFile>.\MoviesApi.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

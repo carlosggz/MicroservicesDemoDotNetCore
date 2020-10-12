@@ -6,6 +6,8 @@ services:
     build:
       context: .
       dockerfile: ApiGateway/Dockerfile
+    networks:
+        - my-network
 
   actorsapi:
     image: ${DOCKER_REGISTRY-}actorsapi
@@ -14,6 +16,8 @@ services:
       dockerfile: ActorsApi/Dockerfile
     depends_on:
         - rabbitmq
+    networks:
+        - my-network
 
   moviesapi:
     image: ${DOCKER_REGISTRY-}moviesapi
@@ -22,18 +26,30 @@ services:
       dockerfile: MoviesApi/Dockerfile
     depends_on:
         - rabbitmq
+    networks:
+        - my-network
 
   authapi:
     image: ${DOCKER_REGISTRY-}authapi
     build:
       context: .
       dockerfile: AuthApi/Dockerfile
+    networks:
+        - my-network
 
   rabbitmq:
     image: rabbitmq:3-management
+    networks:
+        - my-network
 
   consulservice:
     image: consul:latest
     command: consul agent -dev -log-level=warn -ui -client=0.0.0.0
     hostname: consulservice
     container_name: consulservice
+    networks:
+        - my-network
+
+networks:
+    my-network:
+        driver: bridge
