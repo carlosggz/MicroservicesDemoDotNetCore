@@ -74,9 +74,11 @@
 		"DurationOfBreak": 3000,
 		"TimeoutValue": 5000
 	},
-	"ServiceDiscoveryProvider": {
-		"Host": "consulservice",
-		"Port": 8500,
-		"Type": "Consul"
+	"GlobalConfiguration": {
+		"ServiceDiscoveryProvider": {
+			"Host": "consulservice",
+			"Port": 8500,
+			"Type": "Consul"
+		}
 	}
 }

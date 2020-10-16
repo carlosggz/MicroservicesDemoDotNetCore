@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   apigateway:
-    image: ${DOCKER_REGISTRY-}apigateway
+    image: apigateway:latest
     build:
       context: .
       dockerfile: ApiGateway/Dockerfile
@@ -10,7 +10,7 @@ services:
         - my-network
 
   actorsapi:
-    image: ${DOCKER_REGISTRY-}actorsapi
+    image: actorsapi:latest
     build:
       context: .
       dockerfile: ActorsApi/Dockerfile
@@ -20,7 +20,7 @@ services:
         - my-network
 
   moviesapi:
-    image: ${DOCKER_REGISTRY-}moviesapi
+    image: moviesapi:latest
     build:
       context: .
       dockerfile: MoviesApi/Dockerfile
@@ -30,7 +30,7 @@ services:
         - my-network
 
   authapi:
-    image: ${DOCKER_REGISTRY-}authapi
+    image: authapi:latest
     build:
       context: .
       dockerfile: AuthApi/Dockerfile
