@@ -1,6 +1,25 @@
 version: '3.4'
 
 services:
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    networks:
+        - my-network
+    ports:
+        - '5672:5672'
+        - '15672:15672'
+
+  consulservice:
+    image: consul:latest
+    command: consul agent -dev -log-level=warn -ui -client=0.0.0.0
+    hostname: consulservice
+    container_name: consulservice
+    networks:
+        - my-network
+    ports:
+      - "8500:8500"
+
   apigateway:
     image: apigateway:latest
     build:
@@ -8,17 +27,14 @@ services:
       dockerfile: ApiGateway/Dockerfile
     networks:
         - my-network
-
-  actorsapi:
-    image: actorsapi:latest
-    build:
-      context: .
-      dockerfile: ActorsApi/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Containers
+      - ASPNETCORE_URLS=http://*:8000
+    ports:
+      - "8000:80"
     depends_on:
-        - rabbitmq
-    networks:
-        - my-network
-
+      - consulservice
+  
   moviesapi:
     image: moviesapi:latest
     build:
@@ -28,7 +44,18 @@ services:
         - rabbitmq
     networks:
         - my-network
-
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Containers
+      - ASPNETCORE_URLS=http://*:8001
+      - ServiceConfig__ServiceDiscoveryAddress=http://consulservice:8500
+      - ServiceConfig__ServiceAddress=http://moviesapi:80
+      - ServiceConfig__ServiceName=movies
+      - ServiceConfig__ServiceId=v1
+    ports:
+      - "8001:80"
+    depends_on:
+      - consulservice
+  
   authapi:
     image: authapi:latest
     build:
@@ -36,20 +63,38 @@ services:
       dockerfile: AuthApi/Dockerfile
     networks:
         - my-network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Containers
+      - ASPNETCORE_URLS=http://*:8003
+      - ServiceConfig__ServiceDiscoveryAddress=http://consulservice:8500
+      - ServiceConfig__ServiceAddress=http://authapi:80
+      - ServiceConfig__ServiceName=auth
+      - ServiceConfig__ServiceId=v1
+    ports:
+      - "8003:80"
+    depends_on:
+      - consulservice
 
-  rabbitmq:
-    image: rabbitmq:3-management
+  actorsapi:
+    image: actorsapi:latest
+    build:
+      context: .
+      dockerfile: ActorsApi/Dockerfile
+    depends_on:
+      - rabbitmq
+      - consulservice
     networks:
-        - my-network
-
-  consulservice:
-    image: consul:latest
-    command: consul agent -dev -log-level=warn -ui -client=0.0.0.0
-    hostname: consulservice
-    container_name: consulservice
-    networks:
-        - my-network
-
+      - my-network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Containers
+      - ASPNETCORE_URLS=http://*:8002
+      - ServiceConfig__ServiceDiscoveryAddress=http://consulservice:8500
+      - ServiceConfig__ServiceAddress=http://actorsapi:80
+      - ServiceConfig__ServiceName=actors
+      - ServiceConfig__ServiceId=v1
+    ports:
+      - "8002:80"
+    
 networks:
     my-network:
         driver: bridge

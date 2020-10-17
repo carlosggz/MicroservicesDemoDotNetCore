@@ -33,7 +33,7 @@ namespace Common.Infrastructure
             };
 
             _logger.LogInformation($"Registering service {_registrationId}...");
-
+            Task.Delay(30000).Wait(); //Added a delay due to the service availability on docker
             await _client.Agent.ServiceDeregister(registration.ID, cancellationToken);
             await _client.Agent.ServiceRegister(registration, cancellationToken);
         }

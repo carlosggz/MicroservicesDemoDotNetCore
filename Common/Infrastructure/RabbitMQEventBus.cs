@@ -85,6 +85,7 @@ namespace Common.Infrastructure
             if (!_eventMap.ContainsKey(eventName))
                 _eventMap.Add(eventName, typeof(E));
 
+            Task.Delay(30000).Wait(); //Added a delay due to the service availability on docker
             var factory = new ConnectionFactory() { HostName = _rabbitHostname, Port = _rabbitPort, DispatchConsumersAsync = true };
             var connection = factory.CreateConnection();
             var channel = connection.CreateModel();
