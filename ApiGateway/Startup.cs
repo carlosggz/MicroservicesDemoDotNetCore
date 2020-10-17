@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using ApiGateway.MessageHandlers;
+using ApiGateway.Models;
 using ApiGateway.Remotes;
 using Common.Infrastructure;
 using Microsoft.AspNetCore.Builder;
@@ -36,6 +37,8 @@ namespace ApiGateway
         {
             services.AddControllers();
 
+            services.Configure<AppSettingsModel>(Configuration.GetSection(AppSettingsModel.Key));
+
             ConfigHelpers.RegisterJwtAuthentication(services, Configuration);
 
             services
@@ -44,13 +47,11 @@ namespace ApiGateway
                 .AddPolly()
                 .AddConsul();
 
-            services.AddHttpClient("MoviesService", config =>
-            {
-                config.BaseAddress = new Uri(Configuration.GetValue<string>("Services:Movies"));
-            })
-            .SetHandlerLifetime(TimeSpan.FromMinutes(3))
-            .AddPolicyHandler(GetRetryPolicy())
-            .AddPolicyHandler(GetCircuitBreakerPolicy());
+            services
+                .AddHttpClient("MoviesService")
+                .SetHandlerLifetime(TimeSpan.FromMinutes(3))
+                .AddPolicyHandler(GetRetryPolicy())
+                .AddPolicyHandler(GetCircuitBreakerPolicy());
 
             services.AddSingleton<IRemoteMoviesService, RemoteMoviesService>();
         }

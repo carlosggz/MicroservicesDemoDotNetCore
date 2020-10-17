@@ -1,7 +1,11 @@
 ﻿using ApiGateway.Models;
+using Common.Infrastructure;
+using Consul;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -13,11 +17,13 @@ namespace ApiGateway.Remotes
     {
         private readonly ILogger<RemoteMoviesService> _logger;
         private readonly IHttpClientFactory _httpClient;
+        private readonly AppSettingsModel _settings;
 
-        public RemoteMoviesService(ILogger<RemoteMoviesService> logger, IHttpClientFactory httpClient)
+        public RemoteMoviesService(ILogger<RemoteMoviesService> logger, IHttpClientFactory httpClient, IOptions<AppSettingsModel> settings)
         {
             _logger = logger;
             _httpClient = httpClient;
+            _settings = settings.Value;
         }
         public async Task<IEnumerable<MovieModel>> GetMovies(IEnumerable<string> ids)
         {
@@ -27,7 +33,11 @@ namespace ApiGateway.Remotes
             {
                 var json = JsonSerializer.Serialize(ids);
                 var toSend = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var serviceUrl = await ConfigHelpers.GetServiceInfo(_settings.ServiceDiscoveryAddress, _settings.MoviesServiceName);
+
                 var client = _httpClient.CreateClient("MoviesService");
+                client.BaseAddress = serviceUrl;
                 var response = await client.PostAsync("/api/v1/movies/search", toSend);
 
                 if (!response.IsSuccessStatusCode)

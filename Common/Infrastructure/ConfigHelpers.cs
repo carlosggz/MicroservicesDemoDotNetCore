@@ -6,7 +6,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Common.Infrastructure
 {
@@ -46,5 +48,12 @@ namespace Common.Infrastructure
             services.AddSingleton<IConsulClient, ConsulClient>(p => consulClient);
         }
 
+        public static async Task<Uri> GetServiceInfo(string discoveryAddress, string serviceName)
+        {
+            var consulClient = new ConsulClient(config => config.Address = new Uri(discoveryAddress));
+            var services = await consulClient.Agent.Services();
+            var instance = services.Response.Values.FirstOrDefault(x => x.Service == serviceName);
+            return instance == null ? null : new UriBuilder(Uri.UriSchemeHttp, instance.Address, instance.Port).Uri;
+        }
     }
 }

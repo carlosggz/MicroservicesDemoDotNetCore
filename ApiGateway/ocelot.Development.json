@@ -69,16 +69,16 @@
 			"UpstreamPathTemplate": "/All"
 		}
 	],
-	"QoSOptions": {
-		"ExceptionsAllowedBeforeBreaking": 3,
-		"DurationOfBreak": 3000,
-		"TimeoutValue": 5000
-	},
 	"GlobalConfiguration": {
 		"ServiceDiscoveryProvider": {
-			"Host": "consulservice",
+			"Host": "localhost",
 			"Port": 8500,
 			"Type": "Consul"
+		},
+		"QoSOptions": {
+			"ExceptionsAllowedBeforeBreaking": 3,
+			"DurationOfBreak": 3000,
+			"TimeoutValue": 5000
 		}
 	}
 }
