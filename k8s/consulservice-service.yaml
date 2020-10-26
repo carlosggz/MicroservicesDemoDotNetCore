@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: consulservice
+  name: consulservice
+spec:
+  ports:
+  - name: "8500"
+    port: 8500
+    targetPort: 8500
+  selector:
+    app: consulservice
+  type: LoadBalancer

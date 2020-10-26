@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: actorsapi
+  labels:
+    app: actorsapi
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: actorsapi
+  template:
+    metadata:
+      labels:
+        app: actorsapi  
+    spec:
+      containers:
+      - env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Containers
+        - name: ASPNETCORE_URLS
+          value: http://*:80
+        - name: ServiceConfig__ServiceAddress
+          value: http://actorsapi:8002
+        - name: ServiceConfig__ServiceDiscoveryAddress
+          value: http://consulservice:8500
+        - name: ServiceConfig__ServiceId
+          value: v1
+        - name: ServiceConfig__ServiceName
+          value: actors
+        image: actorsapi:latest
+        imagePullPolicy: IfNotPresent
+        name: actorsapi
+        ports:
+        - containerPort: 80
+        resources: {}
+      restartPolicy: Always

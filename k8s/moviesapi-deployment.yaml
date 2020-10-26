@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: moviesapi
+  name: moviesapi
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: moviesapi
+  template:
+    metadata:
+      labels:
+        app: moviesapi
+    spec:
+      containers:
+      - env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Containers
+        - name: ASPNETCORE_URLS
+          value: http://*:8001
+        - name: ServiceConfig__ServiceAddress
+          value: http://moviesapi:8001
+        - name: ServiceConfig__ServiceDiscoveryAddress
+          value: http://consulservice:8500
+        - name: ServiceConfig__ServiceId
+          value: v1
+        - name: ServiceConfig__ServiceName
+          value: movies
+        image: moviesapi:latest
+        imagePullPolicy: IfNotPresent
+        name: moviesapi
+        ports:
+        - containerPort: 80
+        resources: {}
+      restartPolicy: Always

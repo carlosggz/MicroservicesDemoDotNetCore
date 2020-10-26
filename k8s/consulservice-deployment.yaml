@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: consulservice
+  name: consulservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: consulservice
+  template:
+    metadata:
+      labels:
+        app: consulservice
+    spec:
+      containers:
+      - args:
+        - consul
+        - agent
+        - -dev
+        - -log-level=warn
+        - -ui
+        - -client=0.0.0.0
+        image: consul:latest
+        imagePullPolicy: IfNotPresent
+        name: consulservice
+        ports:
+        - containerPort: 8500
+        resources: {}
+      hostname: consulservice
+      restartPolicy: Always

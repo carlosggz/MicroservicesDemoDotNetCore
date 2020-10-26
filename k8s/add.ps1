@@ -1,0 +1,1 @@
+kubectl apply -f actorsapi-deployment.yaml,actorsapi-service.yaml,apigateway-deployment.yaml,apigateway-service.yaml,authapi-deployment.yaml,authapi-service.yaml,consulservice-deployment.yaml,consulservice-service.yaml,moviesapi-deployment.yaml,moviesapi-service.yaml,rabbitmq-deployment.yaml,rabbitmq-service.yaml

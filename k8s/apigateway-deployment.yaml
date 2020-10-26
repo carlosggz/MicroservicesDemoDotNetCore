@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: apigateway
+  name: apigateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apigateway
+  template:
+    metadata:
+      labels:
+        app: apigateway
+    spec:
+      containers:
+      - env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Containers
+        - name: ASPNETCORE_URLS
+          value: http://*:8000
+        image: apigateway:latest
+        imagePullPolicy: IfNotPresent
+        name: apigateway
+        ports:
+        - containerPort: 80
+        resources: {}
+      restartPolicy: Always
