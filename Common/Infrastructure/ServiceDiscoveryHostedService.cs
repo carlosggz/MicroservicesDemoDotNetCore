@@ -1,6 +1,7 @@
 ﻿using Consul;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,7 +23,7 @@ namespace Common.Infrastructure
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            _registrationId = $"{_config.ServiceName}-{_config.ServiceId}";
+            _registrationId = $"{_config.ServiceName}-{_config.ServiceId}-" + Guid.NewGuid().ToString();
 
             var registration = new AgentServiceRegistration
             {
